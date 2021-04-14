@@ -88,7 +88,7 @@ Miscellaneous:
   -h, --help                display this help and exit.
 ```
 示例
-
+```
 $ show-busy-java-threads
 [1] Busy(57.0%) thread(23355/0x5b3b) stack of java process(23269) under user(admin):
 "pool-1-thread-1" prio=10 tid=0x000000005b5c5000 nid=0x5b3b runnable [0x000000004062c000]

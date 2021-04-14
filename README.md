@@ -7,29 +7,29 @@
     top命令找出有问题Java进程及线程id：开启线程显示模式（top -H，或是打开top后按H） 按CPU使用率排序（top缺省是按CPU使用降序，已经合要求；打开top后按P可以显式指定按CPU使用降序） 记下Java进程id及其CPU高的线程id 用进程id作为参数，jstack有问题的Java进程 手动转换线程id成十六进制（可以用printf %x 1234） 查找十六进制的线程id（可以用vim的查找功能/0x1234，或是grep 0x1234 -A 20） 查看对应的线程栈，以分析问题 查问题时，会要多次上面的操作以分析确定问题，这个过程太繁琐太慢了。
 
 用法
-
+```
 show-busy-java-threads
-@# 从所有运行的Java进程中找出最消耗CPU的线程（缺省5个），打印出其线程栈
-@# 缺省会自动从所有的Java进程中找出最消耗CPU的线程，这样用更方便
-@# 当然你可以手动指定要分析的Java进程Id，以保证只会显示出那个你关心的那个Java进程的信息
+# 从所有运行的Java进程中找出最消耗CPU的线程（缺省5个），打印出其线程栈
+# 缺省会自动从所有的Java进程中找出最消耗CPU的线程，这样用更方便
+# 当然你可以手动指定要分析的Java进程Id，以保证只会显示出那个你关心的那个Java进程的信息
 show-busy-java-threads -p <指定的Java进程Id>
  
 show-busy-java-threads -c <要显示的线程栈数>
  
 show-busy-java-threads <重复执行的间隔秒数> [<重复执行的次数>]
-@# 多次执行；这2个参数的使用方式类似vmstat命令
+# 多次执行；这2个参数的使用方式类似vmstat命令
  
 show-busy-java-threads -a <运行输出的记录到的文件>
-@# 记录到文件以方便回溯查看
+# 记录到文件以方便回溯查看
  
 show-duplicate-java-classes -S <存储jstack输出文件的目录>
-@# 指定jstack输出文件的存储目录，方便记录以后续分析
+# 指定jstack输出文件的存储目录，方便记录以后续分析
  
 ##############################
 # 注意：
 ##############################
-@# 如果Java进程的用户 与 执行脚本的当前用户 不同，则jstack不了这个Java进程
-@# 为了能切换到Java进程的用户，需要加sudo来执行，即可以解决：
+# 如果Java进程的用户 与 执行脚本的当前用户 不同，则jstack不了这个Java进程
+# 为了能切换到Java进程的用户，需要加sudo来执行，即可以解决：
 sudo show-busy-java-threads
  
 show-busy-java-threads -s <指定jstack命令的全路径>
@@ -86,6 +86,7 @@ cpu usage calculation control:
  
 Miscellaneous:
   -h, --help                display this help and exit.
+```
 示例
 
 $ show-busy-java-threads

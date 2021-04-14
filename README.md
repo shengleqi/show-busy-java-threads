@@ -33,20 +33,20 @@ show-duplicate-java-classes -S <存储jstack输出文件的目录>
 sudo show-busy-java-threads
  
 show-busy-java-threads -s <指定jstack命令的全路径>
-@# 对于sudo方式的运行，JAVA_HOME环境变量不能传递给root，
-@# 而root用户往往没有配置JAVA_HOME且不方便配置，
-@# 显式指定jstack命令的路径就反而显得更方便了
- 
-@# -m选项：执行jstack命令时加上-m选项，显示上Native的栈帧，一般应用排查不需要使用
+# 对于sudo方式的运行，JAVA_HOME环境变量不能传递给root，
+# 而root用户往往没有配置JAVA_HOME且不方便配置，
+# 显式指定jstack命令的路径就反而显得更方便了
+
+# -m选项：执行jstack命令时加上-m选项，显示上Native的栈帧，一般应用排查不需要使用
 show-busy-java-threads -m
-@# -F选项：执行jstack命令时加上 -F 选项（如果直接jstack无响应时，用于强制jstack），一般情况不需要使用
+# -F选项：执行jstack命令时加上 -F 选项（如果直接jstack无响应时，用于强制jstack），一般情况不需要使用
 show-busy-java-threads -F
-@# -l选项：执行jstack命令时加上 -l 选项，显示上更多相关锁的信息，一般情况不需要使用
-@# 注意：和 -m -F 选项一起使用时，可能会大大增加jstack操作的耗时
+# -l选项：执行jstack命令时加上 -l 选项，显示上更多相关锁的信息，一般情况不需要使用
+# 注意：和 -m -F 选项一起使用时，可能会大大增加jstack操作的耗时
 show-busy-java-threads -l
  
-@# 帮助信息
-```
+# 帮助信息
+
 $ show-busy-java-threads -h
 Usage: show-busy-java-threads [OPTION]... [delay [count]]
 Find out the highest cpu consumed threads of java, and print the stack of these threads.

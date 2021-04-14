@@ -1,10 +1,8 @@
 这是一个非常经典的脚本，由于某种原因原始版主把脚本删除了，因为日常工作都能用到的脚本，所以这里推荐给大家！
 
 介绍：
-
-    用于快速排查Java的CPU性能问题(top us值过高)，自动查出运行的Java进程中消耗CPU多的线程，并打印出其线程栈，从而确定导致性能问题的方法调用。目前只支持Linux。原因是Mac、Windows的ps命令不支持列出进程的线程id。
-
-    top命令找出有问题Java进程及线程id：开启线程显示模式（top -H，或是打开top后按H） 按CPU使用率排序（top缺省是按CPU使用降序，已经合要求；打开top后按P可以显式指定按CPU使用降序） 记下Java进程id及其CPU高的线程id 用进程id作为参数，jstack有问题的Java进程 手动转换线程id成十六进制（可以用printf %x 1234） 查找十六进制的线程id（可以用vim的查找功能/0x1234，或是grep 0x1234 -A 20） 查看对应的线程栈，以分析问题 查问题时，会要多次上面的操作以分析确定问题，这个过程太繁琐太慢了。
+用于快速排查Java的CPU性能问题(top us值过高)，自动查出运行的Java进程中消耗CPU多的线程，并打印出其线程栈，从而确定导致性能问题的方法调用。目前只支持Linux。原因是Mac、Windows的ps命令不支持列出进程的线程id。
+top命令找出有问题Java进程及线程id：开启线程显示模式（top -H，或是打开top后按H） 按CPU使用率排序（top缺省是按CPU使用降序，已经合要求；打开top后按P可以显式指定按CPU使用降序） 记下Java进程id及其CPU高的线程id 用进程id作为参数，jstack有问题的Java进程 手动转换线程id成十六进制（可以用printf %x 1234） 查找十六进制的线程id（可以用vim的查找功能/0x1234，或是grep 0x1234 -A 20） 查看对应的线程栈，以分析问题 查问题时，会要多次上面的操作以分析确定问题，这个过程太繁琐太慢了。
 
 用法
 ```
@@ -46,7 +44,6 @@ show-busy-java-threads -F
 show-busy-java-threads -l
  
 # 帮助信息
-
 $ show-busy-java-threads -h
 Usage: show-busy-java-threads [OPTION]... [delay [count]]
 Find out the highest cpu consumed threads of java, and print the stack of these threads.
@@ -118,8 +115,8 @@ $ show-busy-java-threads
     at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
     at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
     at java.lang.Thread.run(Thread.java:662)
-上面的线程栈可以看出，CPU消耗最高的2个线程都在执行java.text.DateFormat.format，业务代码对应的方法是shared.monitor.schedule.AppMonitorDataAvgScheduler.run。可以基本确定：
 ```
+上面的线程栈可以看出，CPU消耗最高的2个线程都在执行java.text.DateFormat.format，业务代码对应的方法是shared.monitor.schedule.AppMonitorDataAvgScheduler.run。可以基本确定：
 
 AppMonitorDataAvgScheduler.run调用DateFormat.format次数比较频繁。DateFormat.format比较慢。（这个可以由DateFormat.format的实现确定。） 多执行几次show-busy-java-threads，如果上面情况高概率出现，则可以确定上面的判定。因为调用越少代码执行越快，则出现在线程栈的概率就越低。脚本有自动多次执行的功能，指定 重复执行的间隔秒数/重复执行的次数 参数。
 

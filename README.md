@@ -9,43 +9,44 @@
 用法
 
 show-busy-java-threads
-# 从所有运行的Java进程中找出最消耗CPU的线程（缺省5个），打印出其线程栈
-# 缺省会自动从所有的Java进程中找出最消耗CPU的线程，这样用更方便
-# 当然你可以手动指定要分析的Java进程Id，以保证只会显示出那个你关心的那个Java进程的信息
+@# 从所有运行的Java进程中找出最消耗CPU的线程（缺省5个），打印出其线程栈
+@# 缺省会自动从所有的Java进程中找出最消耗CPU的线程，这样用更方便
+@# 当然你可以手动指定要分析的Java进程Id，以保证只会显示出那个你关心的那个Java进程的信息
 show-busy-java-threads -p <指定的Java进程Id>
  
 show-busy-java-threads -c <要显示的线程栈数>
  
 show-busy-java-threads <重复执行的间隔秒数> [<重复执行的次数>]
-# 多次执行；这2个参数的使用方式类似vmstat命令
+@# 多次执行；这2个参数的使用方式类似vmstat命令
  
 show-busy-java-threads -a <运行输出的记录到的文件>
-# 记录到文件以方便回溯查看
+@# 记录到文件以方便回溯查看
  
 show-duplicate-java-classes -S <存储jstack输出文件的目录>
-# 指定jstack输出文件的存储目录，方便记录以后续分析
+@# 指定jstack输出文件的存储目录，方便记录以后续分析
  
 ##############################
 # 注意：
 ##############################
-# 如果Java进程的用户 与 执行脚本的当前用户 不同，则jstack不了这个Java进程
-# 为了能切换到Java进程的用户，需要加sudo来执行，即可以解决：
+@# 如果Java进程的用户 与 执行脚本的当前用户 不同，则jstack不了这个Java进程
+@# 为了能切换到Java进程的用户，需要加sudo来执行，即可以解决：
 sudo show-busy-java-threads
  
 show-busy-java-threads -s <指定jstack命令的全路径>
-# 对于sudo方式的运行，JAVA_HOME环境变量不能传递给root，
-# 而root用户往往没有配置JAVA_HOME且不方便配置，
-# 显式指定jstack命令的路径就反而显得更方便了
+@# 对于sudo方式的运行，JAVA_HOME环境变量不能传递给root，
+@# 而root用户往往没有配置JAVA_HOME且不方便配置，
+@# 显式指定jstack命令的路径就反而显得更方便了
  
-# -m选项：执行jstack命令时加上-m选项，显示上Native的栈帧，一般应用排查不需要使用
+@# -m选项：执行jstack命令时加上-m选项，显示上Native的栈帧，一般应用排查不需要使用
 show-busy-java-threads -m
-# -F选项：执行jstack命令时加上 -F 选项（如果直接jstack无响应时，用于强制jstack），一般情况不需要使用
+@# -F选项：执行jstack命令时加上 -F 选项（如果直接jstack无响应时，用于强制jstack），一般情况不需要使用
 show-busy-java-threads -F
-# -l选项：执行jstack命令时加上 -l 选项，显示上更多相关锁的信息，一般情况不需要使用
-# 注意：和 -m -F 选项一起使用时，可能会大大增加jstack操作的耗时
+@# -l选项：执行jstack命令时加上 -l 选项，显示上更多相关锁的信息，一般情况不需要使用
+@# 注意：和 -m -F 选项一起使用时，可能会大大增加jstack操作的耗时
 show-busy-java-threads -l
  
-# 帮助信息
+@# 帮助信息
+```
 $ show-busy-java-threads -h
 Usage: show-busy-java-threads [OPTION]... [delay [count]]
 Find out the highest cpu consumed threads of java, and print the stack of these threads.
@@ -117,6 +118,7 @@ $ show-busy-java-threads
     at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
     at java.lang.Thread.run(Thread.java:662)
 上面的线程栈可以看出，CPU消耗最高的2个线程都在执行java.text.DateFormat.format，业务代码对应的方法是shared.monitor.schedule.AppMonitorDataAvgScheduler.run。可以基本确定：
+```
 
 AppMonitorDataAvgScheduler.run调用DateFormat.format次数比较频繁。DateFormat.format比较慢。（这个可以由DateFormat.format的实现确定。） 多执行几次show-busy-java-threads，如果上面情况高概率出现，则可以确定上面的判定。因为调用越少代码执行越快，则出现在线程栈的概率就越低。脚本有自动多次执行的功能，指定 重复执行的间隔秒数/重复执行的次数 参数。
 
